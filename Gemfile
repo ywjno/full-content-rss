@@ -2,7 +2,7 @@ source :rubygems
 
 gem "sinatra"
 gem "sinatra-contrib"
-gem "thin"
+gem "puma"
 gem "mongoid", "~> 3.0.0"
 gem "builder"
 gem "nokogiri"

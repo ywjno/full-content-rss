@@ -5,3 +5,4 @@ xml_description: YOUR_XML_DESCRIPTION
 web_link: YOUR_WEB_LINK
 time_zone: YOUR_TIME_ZONE
 scheduler_time: YOUR_SCHEDULER_TIME
+server: puma
