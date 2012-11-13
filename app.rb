@@ -2,22 +2,18 @@
 
 require 'rubygems'
 require 'sinatra'
+require 'sinatra/config_file'
 require 'bundler/setup'
+require 'builder'
 require 'rufus/scheduler'
 require "#{settings.root}/lib/database"
 require "#{settings.root}/models/rss_item"
 
+config_file "#{settings.root}/config/app_configs.yml"
+
 configure do
-  configs = YAML.load_file("#{settings.root}/config/app_configs.yml")
-
-  set :site_name, configs['site_name']
-  set :title, configs['xml_title']
-  set :description, configs['xml_description']
-  set :web_link, configs['web_link']
-  set :time_zone, configs['time_zone']
-
   scheduler = Rufus::Scheduler.start_new
-  scheduler.every configs['scheduler_time'], :first_at => Time.now do
+  scheduler.every settings.scheduler_time, :first_at => Time.now do
     system "ruby script/spider.rb"
   end
 end
@@ -32,8 +28,8 @@ get '/rss.xml' do
     xml.instruct! :xml, :version => '1.0', :encoding => 'UTF-8'
     xml.rss :version => "2.0" do
       xml.channel do
-        xml.title settings.title
-        xml.description settings.description
+        xml.title settings.xml_title
+        xml.description settings.xml_description
         xml.link settings.web_link
 
         RssItem.order_by(pubDate: :desc).limit(50).each do |item|
