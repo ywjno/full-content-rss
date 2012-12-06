@@ -13,8 +13,8 @@ class CrawlUtil
       rss = Nokogiri::XML(open(RSS_URL))
       today = Time.now.to_date
       count = 0
+      RssItem.delete_all if 'init' == status
       File.open(File.expand_path("../../log/info.log", __FILE__), "w") do |file|
-        RssItem.delete_all if 'init' == status
         file.puts "#{Time.now}====>start #{status} data."
         rss.css('item').each do |item|
           rss_item = extract(item)
@@ -29,6 +29,7 @@ class CrawlUtil
             rss_item.save
           end
           file.puts "#{Time.now}====>#{rss_item.link}"
+          file.flush
           count += 1
           sleep(rand 5)
         end
