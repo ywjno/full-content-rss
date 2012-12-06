@@ -3,6 +3,7 @@
 require 'rubygems'
 require 'sinatra/base'
 require 'sinatra/config_file'
+require 'sinatra/reloader'
 require 'bundler/setup'
 require 'builder'
 require 'rufus/scheduler'
@@ -13,6 +14,10 @@ class App < Sinatra::Base
   register Sinatra::ConfigFile
 
   config_file "#{settings.root}/config/app_configs.yml"
+
+  configure :development do
+    register Sinatra::Reloader
+  end
 
   configure :production do
     scheduler = Rufus::Scheduler.start_new
